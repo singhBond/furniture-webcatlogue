@@ -128,7 +128,7 @@ export default function Footer() {
       <div className="border-t border-amber-700">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-4 md:flex-row">
           <p className="text-sm">
-            © {new Date().getFullYear()}, Codestam Technology.
+            © {new Date().getFullYear()}, Furnitures-CatWeb.
           </p>
         </div>
       </div>
