@@ -22,6 +22,9 @@ import {
   X,
 } from "lucide-react";
 
+// === Furniture Icons for Loader ===
+import { Sofa, Armchair, BedDouble, Table } from "lucide-react"; // Added these
+
 // === Read More Component ===
 const DescriptionWithReadMore = ({ text }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -42,6 +45,48 @@ const DescriptionWithReadMore = ({ text }) => {
       >
         {isExpanded ? "Read less" : "Read more"}
       </button>
+    </div>
+  );
+};
+
+// === Furniture Loader Component ===
+const FurnitureLoader = () => {
+  const icons = [Sofa, Armchair, BedDouble, Table];
+  const colors = ["text-amber-600", "text-teal-600", "text-orange-600", "text-emerald-600"];
+
+  return (
+    <div className="fixed inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="relative w-48 h-48">
+        <div className="absolute inset-0 animate-ping">
+          <div className="w-full h-full rounded-full border-4 border-amber-200 opacity-20" />
+        </div>
+
+        {icons.map((Icon, i) => {
+          const angle = (i * 90) - 90; // 4 icons → 90° apart
+          const x = 50 + 40 * Math.cos((angle * Math.PI) / 180);
+          const y = 50 + 40 * Math.sin((angle * Math.PI) / 180);
+
+          return (
+            <div
+              key={i}
+              className="absolute animate-spin-slow"
+              style={{
+                top: `${y}%`,
+                left: `${x}%`,
+                transform: "translate(-50%, -50%)",
+                animationDelay: `${i * 0.2}s`,
+              }}
+            >
+              <Icon size={36} className={`${colors[i]} opacity-80 drop-shadow-lg`} />
+            </div>
+          );
+        })}
+
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+          <p className="text-xl font-bold text-amber-700">Loading...</p>
+          <p className="text-sm text-gray-600 mt-1"> Get Ready to Explore premium Furniture</p>
+        </div>
+      </div>
     </div>
   );
 };
@@ -141,7 +186,7 @@ export default function CatalogPage() {
     if (cart.length === 0) return;
 
     const total = cart.reduce((sum, i) => sum + i.mrp * i.quantity, 0);
-    const items = cart.map((i) => `*${i.name}* × ${i.container} = ₹${i.mrp * i.quantity}`).join("\n");
+    const items = cart.map((i) => `*${i.name}* × ${i.quantity} = ₹${i.mrp * i.quantity}`).join("\n");
     const newId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
     setOrderId(newId);
 
@@ -171,13 +216,18 @@ export default function CatalogPage() {
     const el = document.getElementById(`cat-${cat}`);
     if (el && scrollRef.current) {
       el.scrollIntoView({
-        behavior: "auto",      // ← Instant jump (manual feel)
+        behavior: "auto",
         inline: "center",
         block: "nearest",
       });
     }
     setActiveCategory(cat);
   };
+
+  // Show loader only while categories are loading
+  if (categories.length === 0) {
+    return <FurnitureLoader />;
+  }
 
   return (
     <section className="min-h-screen mt- bg-gradient-to-b from-amber-50 to-white">
@@ -193,13 +243,13 @@ export default function CatalogPage() {
       <div className="sticky top-[6px] z-40 bg-white shadow-sm overflow-hidden">
         <div
           ref={scrollRef}
-          className="flex gap-1 overflow-x-auto scrollbar-hide px-8 py-1 select-none " // ← pr-32 shows next card
+          className="flex gap-1 overflow-x-auto scrollbar-hide px-8 py-1 select-none"
           style={{
-            scrollSnapType: "none",           // ← No snap → full manual control
+            scrollSnapType: "none",
             WebkitOverflowScrolling: "touch",
             touchAction: "pan-x",
             overscrollBehaviorX: "contain",
-            scrollBehavior: "auto",           // ← Manual scroll only
+            scrollBehavior: "auto",
             maskImage: "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
             WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 5%, black 90%, transparent 100%)",
           }}
@@ -297,12 +347,6 @@ export default function CatalogPage() {
           <DialogContent className="max-w-full mt-4 md:max-w-2xl p-2 overflow-hidden rounded-sm md:rounded-2xl">
             <DialogHeader className="p-2 pb-0">
               <DialogTitle className="text-xl pr-8">{selectedProduct.name}</DialogTitle>
-              <button
-                onClick={() => setSelectedProduct(null)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
-              >
-                {/* <X size={20} /> */}
-              </button>
             </DialogHeader>
 
             <div className="flex flex-col md:flex-row gap-2 p-1 pt-0">
@@ -343,7 +387,7 @@ export default function CatalogPage() {
                 })()}
               </div>
 
-              <div className="flex-1 space-y-3 px-4 ">
+              <div className="flex-1 space-y-3 px-4">
                 <div>
                   <p className="text-md text-gray-600">
                     <strong>Size:</strong> {selectedProduct.dimension} {selectedProduct.units}
@@ -478,6 +522,13 @@ export default function CatalogPage() {
         }
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
+        }
+        @keyframes spin-slow {
+          from { transform: translate(-50%, -50%) rotate(0deg); }
+          to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 12s linear infinite;
         }
       `}</style>
     </section>
