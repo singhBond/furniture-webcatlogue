@@ -180,7 +180,7 @@ export default function CatalogPage() {
   };
 
   return (
-    <section className="min-h-screen mt-24 bg-gradient-to-b from-amber-50 to-white">
+    <section className="min-h-screen mt- bg-gradient-to-b from-amber-50 to-white">
       {/* Header */}
       <div className="text-center py-6 bg-gradient-to-r from-orange-100 via-amber-100 to-yellow-50">
         <h2 className="text-2xl md:text-4xl font-bold text-orange-700">Premium Living Spaces</h2>
@@ -190,7 +190,7 @@ export default function CatalogPage() {
       </div>
 
       {/* === TOP NAV: Manual Horizontal Scroll with Peek === */}
-      <div className="sticky top-[100px] z-40 bg-white shadow-sm overflow-hidden">
+      <div className="sticky top-[6px] z-40 bg-white shadow-sm overflow-hidden">
         <div
           ref={scrollRef}
           className="flex gap-1 overflow-x-auto scrollbar-hide px-8 py-1 select-none " // ← pr-32 shows next card
