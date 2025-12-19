@@ -45,7 +45,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#a16b1e] text-gray-200">
+    <footer className="bg-[#a16b1e] text-gray-300">
       {/* Top section */}
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-12 md:grid-cols-4">
         {/* Contact info */}
